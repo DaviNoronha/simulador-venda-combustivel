@@ -32,9 +32,9 @@ function AppTable(props: TableProps) {
           <TableBody>
             {props.vendas.map((venda, index) => (
               <TableRow key={index}>
-                <TableCell>{venda.tipoCombustivel}</TableCell>
+                <TableCell>{venda.combustivel.nome}</TableCell>
                 <TableCell>{venda.litros}</TableCell>
-                <TableCell>{venda.total.toFixed(2)}</TableCell>
+                <TableCell>{venda.valor}</TableCell>
               </TableRow>
             ))}
           </TableBody>

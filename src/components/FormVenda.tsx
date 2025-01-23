@@ -22,9 +22,9 @@ import { Combustivel } from '../interfaces/Combustivel';
 import { Save, DoDisturb, LocalGasStation, PropaneTank, EvStation } from '@mui/icons-material';
 
 function Form() {
-  const [tipoCombustivel, setTipoCombustivel] = useState<string | null>(null);
+  const [combustivel, setCombustivel] = useState<Combustivel | null>(null);
   const [litros, setLitros] = useState<number>();
-  const [total, setTotal] = useState<number>(0);
+  const [valor, setValor] = useState<number>(0);
   const [vendas, setVendas] = useState<Venda[]>([]);
   const [modal, setModal] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
@@ -35,7 +35,7 @@ function Form() {
     setVendas(vendasSalvas);
   }, []);
 
-  const handleClose = (
+  const fecharSnackbar = (
     event?: React.SyntheticEvent | Event,
     reason?: SnackbarCloseReason,
   ) => {
@@ -46,16 +46,16 @@ function Form() {
     setSuccess(false);
   };
 
-  const abrirModal = (combustivelId: string) => {
-    setTipoCombustivel(combustivelId);
+  const abrirModal = (combustivel: Combustivel) => {
+    setCombustivel(combustivel);
     setLitros(0);
-    setTotal(0);
+    setValor(0);
     setModal(true);
   };
 
   const fecharModal = () => {
     setModal(false);
-    setTipoCombustivel(null);
+    setCombustivel(null);
   };
 
   const salvarVenda = () => {
@@ -64,25 +64,36 @@ function Form() {
       return;
     }
 
-    const novaVenda: Venda = { tipoCombustivel, litros: litros, total: total };
-    const vendasAtualizadas = [...vendas, novaVenda];
-
-    setVendas(vendasAtualizadas);
-    localStorage.setItem('vendas', JSON.stringify(vendasAtualizadas));
-
-    setSuccess(true);
-    fecharModal();
-  };
-
-  const changeLitros = (l: string) => {
-    setError(false);
-    const valor = Number(l);
-    if (!isNaN(valor)) {
-      setLitros(valor);
-      const preco = combustiveis.find((c) => c.id === tipoCombustivel)?.preco || 0;
-      setTotal(Number((valor * preco).toFixed(2)));
+    if (combustivel !== null) {
+      const novaVenda: Venda = { combustivel: combustivel, litros: litros, valor: valor, data: new Date().toISOString() };
+      const vendasAtualizadas = [...vendas, novaVenda];
+  
+      setVendas(vendasAtualizadas);
+      localStorage.setItem('vendas', JSON.stringify(vendasAtualizadas));
+  
+      setSuccess(true);
+      fecharModal();
     }
   };
+
+  const changeLitros = (l: number) => {
+    setError(false);
+    if (!isNaN(l)) {
+      setLitros(l);
+      const preco = combustivel?.preco || 0;
+      setValor(l * preco);
+    }
+  };
+
+  const changeValor = (v: number) => {
+    setError(false);
+    if (!isNaN(v)) {
+      setValor(v);
+      const preco = combustivel?.preco || 0;
+      setLitros(v / preco);
+    }
+  };
+
 
   const icones = {
     gasolina: <LocalGasStation fontSize="large" style={{ color: '#FF9800' }} />,
@@ -91,14 +102,14 @@ function Form() {
   };
 
   return (
-    <div>
+    <>
       <Grid2 container spacing={3}>
         {combustiveis.map((combustivel: Combustivel) => (
           <Grid2 size={{ xs: 12, md: 4 }} key={combustivel.id}>
             <Card>
               <CardContent>
                 <IconButton
-                  onClick={() => abrirModal(combustivel.id)}
+                  onClick={() => abrirModal(combustivel)}
                   style={{ display: 'block', margin: '0 auto' }}
                 >
                   {icones[combustivel.id]}
@@ -126,8 +137,9 @@ function Form() {
         }}
       >
         <DialogTitle>
-          Venda de {tipoCombustivel && combustiveis.find((c) => c.id === tipoCombustivel)?.nome}
+          Venda de {combustivel?.nome}
         </DialogTitle>
+
         <DialogContent>
           <TextField
             label="Quantidade em litros"
@@ -144,19 +156,16 @@ function Form() {
           />
           <TextField
             label="Valor a Pagar (R$)"
-            id="total"
-            name="total"
+            id="valor"
+            name="valor"
             type="number"
-            value={total.toFixed(2)}
-            slotProps={{
-              input: {
-                readOnly: true,
-              },
-            }}
+            onChange={(e) => changeValor(e.target.value)}
+            value={valor}
             fullWidth
             style={{ marginBottom: '20px' }}
           />
         </DialogContent>
+
         <DialogActions>
           <Button color="primary" variant="outlined" type="submit">
             <Save />
@@ -167,19 +176,17 @@ function Form() {
         </DialogActions>
       </Dialog>
 
-      <Stack spacing={2} sx={{ maxWidth: 600 }}>
-        <Snackbar open={success} autoHideDuration={5000} onClose={handleClose}>
-          <Alert
-            onClose={handleClose}
-            severity="success"
-            variant="filled"
-            sx={{ width: '100%' }}
-          >
-            Venda registrada! Valor total: R$ ${total}
-          </Alert>
-        </Snackbar>
-      </Stack>
-    </div>
+      <Snackbar open={success} autoHideDuration={5000} onClose={fecharSnackbar}>
+        <Alert
+          onClose={fecharSnackbar}
+          severity="success"
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          Venda registrada! Valor valor: R$ ${valor}
+        </Alert>
+      </Snackbar>
+    </>
   );
 }
 

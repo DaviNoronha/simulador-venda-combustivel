@@ -12,7 +12,7 @@ function Cards(props: CardProps) {
   const calcularTotaisPorCombustivel = () => {
     const totais: PrecoPorLitro = { gasolina: 0, diesel: 0, etanol: 0 };
     props.vendas.forEach((venda) => {
-      totais[venda.tipoCombustivel] += venda.total;
+      totais[venda.combustivel.id] += venda.valor;
     });
     return totais;
   };
@@ -27,7 +27,7 @@ function Cards(props: CardProps) {
 
   return (
     <Grid2 container spacing={3} style={{ marginTop: '5px' }}>
-      {Object.entries(totais).map(([combustivel, total]) => {
+      {Object.entries(totais).map(([combustivel, valor]) => {
         return (
           <Grid2 size={{ xs: 12, md: 4 }} key={combustivel}>
             <Card>
@@ -39,7 +39,7 @@ function Cards(props: CardProps) {
                   </Typography>
                 </Box>
                 <Typography variant="body1" style={{ marginTop: '10px' }}>
-                  Total: R$ {total.toFixed(2)}
+                  Total: R$ {valor.toFixed(2)}
                 </Typography>
               </CardContent>
             </Card>

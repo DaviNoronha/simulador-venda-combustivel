@@ -1,5 +1,8 @@
+import { Combustivel } from "./Combustivel";
+
 export interface Venda {
-  tipoCombustivel: string;
+  combustivel: Combustivel;
   litros: number;
-  total: number;
+  valor: number;
+  data: Date;
 }
