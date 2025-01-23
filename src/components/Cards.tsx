@@ -3,6 +3,7 @@ import '../assets/App.css';
 import { PrecoPorLitro } from '../interfaces/PrecoPorLitro';
 import { Venda } from '../interfaces/Venda';
 import { Typography, Card, CardContent, Box, Grid2 } from '@mui/material';
+
 type CardProps = {
   vendas: Venda[];
 };

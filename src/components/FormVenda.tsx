@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Typography,
   Card,
@@ -17,13 +17,20 @@ import { Save, DoDisturb, LocalGasStation, PropaneTank, EvStation } from '@mui/i
 
 function Form() {
   const [tipoCombustivel, setTipoCombustivel] = useState<string | null>(null);
-  const [litros, setLitros] = useState<string>('');
+  const [litros, setLitros] = useState<number>(0);
+  const [total, setTotal] = useState<number>(0);
   const [vendas, setVendas] = useState<Venda[]>([]);
   const [modal, setModal] = useState<boolean>(false);
 
+  useEffect(() => {
+    const vendasSalvas = JSON.parse(localStorage.getItem('vendas') || '[]') as Venda[];
+    setVendas(vendasSalvas);
+  }, []);
+
   const abrirModal = (combustivelId: string) => {
     setTipoCombustivel(combustivelId);
-    setLitros('');
+    setLitros(0);
+    setTotal(0);
     setModal(true);
   };
 
@@ -33,21 +40,28 @@ function Form() {
   };
 
   const salvarVenda = () => {
-    if (!tipoCombustivel || !litros || isNaN(Number(litros))) {
+    if (!tipoCombustivel || !litros || isNaN(litros)) {
       alert('Por favor, insira todos os campos corretamente.');
       return;
     }
 
-    const preco = combustiveis.find((c) => c.id === tipoCombustivel)?.preco || 0;
-    const total = (Number(litros) * preco).toFixed(2);
-    const novaVenda: Venda = { tipoCombustivel, litros: parseFloat(litros), total: parseFloat(total) };
-
+    const novaVenda: Venda = { tipoCombustivel, litros: litros, total: total };
     const vendasAtualizadas = [...vendas, novaVenda];
+
     setVendas(vendasAtualizadas);
     localStorage.setItem('vendas', JSON.stringify(vendasAtualizadas));
 
     alert(`Venda registrada! Valor total: R$ ${total}`);
     fecharModal();
+  };
+
+  const changeLitros = (l: string) => {
+    const valor = Number(l);
+    if (!isNaN(valor)) {
+      setLitros(valor);
+      const preco = combustiveis.find((c) => c.id === tipoCombustivel)?.preco || 0;
+      setTotal(Number((valor * preco).toFixed(2)));
+    }
   };
 
   const icones = {
@@ -86,8 +100,8 @@ function Form() {
             left: '50%',
             transform: 'translate(-50%, -50%)',
             width: 400,
-            backgroundColor: 'rgba(255, 255, 255, 0.08',
-            boxShadow: 24,
+            backgroundColor: 'rgba(255, 255, 255, 0.08)',
+            boxShadow: '24',
             padding: '20px',
             borderRadius: '8px',
           }}
@@ -99,10 +113,21 @@ function Form() {
             label="Quantidade em litros"
             type="number"
             value={litros}
-            onChange={(e) => setLitros(e.target.value)}
+            onChange={(e) => changeLitros(e.target.value)}
             fullWidth
             required
-            inputProps={{ min: 0, step: 0.01 }}
+            style={{ marginTop: '20px', marginBottom: '20px' }}
+          />
+          <TextField
+            label="Valor a Pagar (R$)"
+            type="number"
+            value={total.toFixed(2)}
+            slotProps={{
+              input: {
+                readOnly: true,
+              },
+            }}
+            fullWidth
             style={{ marginBottom: '20px' }}
           />
           <Grid2 container spacing={1} justifyContent="flex-end">
