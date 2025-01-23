@@ -4,11 +4,17 @@ import {
   Card,
   CardContent,
   IconButton,
-  Modal,
-  Box,
   TextField,
   Button,
   Grid2,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Snackbar,
+  Alert,
+  SnackbarCloseReason,
+  Stack,
 } from '@mui/material';
 import { combustiveis } from '../utils/combustiveis';
 import { Venda } from '../interfaces/Venda';
@@ -17,15 +23,28 @@ import { Save, DoDisturb, LocalGasStation, PropaneTank, EvStation } from '@mui/i
 
 function Form() {
   const [tipoCombustivel, setTipoCombustivel] = useState<string | null>(null);
-  const [litros, setLitros] = useState<number>(0);
+  const [litros, setLitros] = useState<number>();
   const [total, setTotal] = useState<number>(0);
   const [vendas, setVendas] = useState<Venda[]>([]);
   const [modal, setModal] = useState<boolean>(false);
+  const [success, setSuccess] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
 
   useEffect(() => {
     const vendasSalvas = JSON.parse(localStorage.getItem('vendas') || '[]') as Venda[];
     setVendas(vendasSalvas);
   }, []);
+
+  const handleClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: SnackbarCloseReason,
+  ) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setSuccess(false);
+  };
 
   const abrirModal = (combustivelId: string) => {
     setTipoCombustivel(combustivelId);
@@ -40,8 +59,8 @@ function Form() {
   };
 
   const salvarVenda = () => {
-    if (!tipoCombustivel || !litros || isNaN(litros)) {
-      alert('Por favor, insira todos os campos corretamente.');
+    if (!litros || isNaN(litros) || litros < 0) {
+      setError(true);
       return;
     }
 
@@ -51,11 +70,12 @@ function Form() {
     setVendas(vendasAtualizadas);
     localStorage.setItem('vendas', JSON.stringify(vendasAtualizadas));
 
-    alert(`Venda registrada! Valor total: R$ ${total}`);
+    setSuccess(true);
     fecharModal();
   };
 
   const changeLitros = (l: string) => {
+    setError(false);
     const valor = Number(l);
     if (!isNaN(valor)) {
       setLitros(valor);
@@ -92,34 +112,40 @@ function Form() {
         ))}
       </Grid2>
 
-      <Modal open={modal} onClose={fecharModal}>
-        <Box
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: 400,
-            backgroundColor: 'rgba(255, 255, 255, 0.08)',
-            boxShadow: '24',
-            padding: '20px',
-            borderRadius: '8px',
-          }}
-        >
-          <Typography variant="h6" gutterBottom>
-            Venda de {tipoCombustivel && combustiveis.find((c) => c.id === tipoCombustivel)?.nome}
-          </Typography>
+      <Dialog
+        open={modal}
+        onClose={fecharModal}
+        slotProps={{
+          paper: {
+            component: 'form',
+            onSubmit: (e: React.FormEvent<HTMLFormElement>) => {
+              e.preventDefault();
+              salvarVenda();
+            },
+          }
+        }}
+      >
+        <DialogTitle>
+          Venda de {tipoCombustivel && combustiveis.find((c) => c.id === tipoCombustivel)?.nome}
+        </DialogTitle>
+        <DialogContent>
           <TextField
             label="Quantidade em litros"
+            id="litros"
+            name="litros"
             type="number"
             value={litros}
             onChange={(e) => changeLitros(e.target.value)}
+            error={error}
+            helperText={error ? "Preencha os campos corretamente" : ""}
             fullWidth
             required
             style={{ marginTop: '20px', marginBottom: '20px' }}
           />
           <TextField
             label="Valor a Pagar (R$)"
+            id="total"
+            name="total"
             type="number"
             value={total.toFixed(2)}
             slotProps={{
@@ -130,16 +156,29 @@ function Form() {
             fullWidth
             style={{ marginBottom: '20px' }}
           />
-          <Grid2 container spacing={1} justifyContent="flex-end">
-            <Button color="primary" variant="outlined" onClick={salvarVenda}>
-              <Save />
-            </Button>
-            <Button color="error" variant="outlined" onClick={fecharModal}>
-              <DoDisturb />
-            </Button>
-          </Grid2>
-        </Box>
-      </Modal>
+        </DialogContent>
+        <DialogActions>
+          <Button color="primary" variant="outlined" type="submit">
+            <Save />
+          </Button>
+          <Button color="error" variant="outlined" onClick={fecharModal}>
+            <DoDisturb />
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Stack spacing={2} sx={{ maxWidth: 600 }}>
+        <Snackbar open={success} autoHideDuration={5000} onClose={handleClose}>
+          <Alert
+            onClose={handleClose}
+            severity="success"
+            variant="filled"
+            sx={{ width: '100%' }}
+          >
+            Venda registrada! Valor total: R$ ${total}
+          </Alert>
+        </Snackbar>
+      </Stack>
     </div>
   );
 }
