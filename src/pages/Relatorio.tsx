@@ -3,12 +3,9 @@ import '../assets/App.css'
 import Cards from '../components/Cards';
 import Table from '../components/Table';
 import { Venda } from '../interfaces/Venda';
-import { PrecoPorLitro } from '../interfaces/PrecoPorLitro';
+import { Typography } from '@mui/material';
 
-function Index() {
-  const [tipoCombustivel, setTipoCombustivel] = useState<string>('');
-  const [litros, setLitros] = useState<string>('');
-  const [precoPorLitro, setPrecoPorLitro] = useState<PrecoPorLitro>({ gasolina: 5.5, diesel: 4.2, etanol: 3.9 });
+function Relatorio() {
   const [vendas, setVendas] = useState<Venda[]>([]);
 
   useEffect(() => {
@@ -18,7 +15,7 @@ function Index() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">Tabela de Combustível</h1>
+      <h1 className="text-2xl font-bold mb-6">Relatório de Vendas</h1>
 
       <Cards
         vendas={vendas} />
@@ -29,4 +26,4 @@ function Index() {
   );
 }
 
-export default Index;
+export default Relatorio;

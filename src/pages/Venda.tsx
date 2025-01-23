@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import '../assets/App.css'
-import Form from '../components/Form';
+import FormVenda from '../components/FormVenda';
 import { Venda } from '../interfaces/Venda';
 import { PrecoPorLitro } from '../interfaces/PrecoPorLitro';
+import { combustiveis } from '../utils/combustiveis';
 
-function Index() {
+function AppVenda() {
   const [tipoCombustivel, setTipoCombustivel] = useState<string>('');
   const [litros, setLitros] = useState<string>('');
   const [precoPorLitro, setPrecoPorLitro] = useState<PrecoPorLitro>({ gasolina: 5.5, diesel: 4.2, etanol: 3.9 });
@@ -19,17 +20,18 @@ function Index() {
     <div>
       <h1 className="text-2xl font-bold mb-6">Venda de Combustível</h1>
 
-      <Form
+      <FormVenda
         tipoCombustivel={tipoCombustivel}
         setTipoCombustivel={setTipoCombustivel}
         litros={litros}
         setLitros={setLitros}
         precoPorLitro={precoPorLitro}
         vendas={vendas}
-        setVendas={setVendas} />
+        setVendas={setVendas} 
+        combustiveis={combustiveis}/>
 
     </div>
   );
 }
 
-export default Index;
+export default AppVenda;

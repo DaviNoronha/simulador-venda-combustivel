@@ -1,35 +1,47 @@
-import { useState } from 'react'
 import '../assets/App.css'
 import { Venda } from '../interfaces/Venda';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from '@mui/material';
 
 type TableProps = {
   vendas: Venda[];
 };
 
-function Table(props: TableProps) {
+function AppTable(props: TableProps) {
   return (
     <div>
-        <h2 className="text-xl font-semibold mb-4">Relatórios de Vendas</h2>
-        <table className="w-full border-collapse border border-gray-300">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="border border-gray-300 p-2">Tipo de Combustível</th>
-              <th className="border border-gray-300 p-2">Quantidade (litros)</th>
-              <th className="border border-gray-300 p-2">Valor Total (R$)</th>
-            </tr>
-          </thead>
-          <tbody>
+      <TableContainer component={Paper} style={{
+        marginTop: '40px', maxHeight: '600px',
+        overflow: 'auto'
+      }}>
+        <Table stickyHeader>
+          <TableHead>
+            <TableRow>
+              <TableCell>Tipo de Combustível</TableCell>
+              <TableCell>Quantidade (litros)</TableCell>
+              <TableCell>Valor Total (R$)</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
             {props.vendas.map((venda, index) => (
-              <tr key={index} className="odd:bg-white even:bg-gray-50">
-                <td className="border border-gray-300 p-2">{venda.tipoCombustivel}</td>
-                <td className="border border-gray-300 p-2">{venda.litros}</td>
-                <td className="border border-gray-300 p-2">{venda.total.toFixed(2)}</td>
-              </tr>
+              <TableRow key={index}>
+                <TableCell>{venda.tipoCombustivel}</TableCell>
+                <TableCell>{venda.litros}</TableCell>
+                <TableCell>{venda.total.toFixed(2)}</TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   )
 }
 
-export default Table
+export default AppTable
