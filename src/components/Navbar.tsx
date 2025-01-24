@@ -24,6 +24,13 @@ function Navbar() {
           </Link>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             <Button
+              component={Link} to="/"
+              sx={{ my: 2, color: 'white', display: 'block' }}
+            >
+              Home
+            </Button>
+
+            <Button
               component={Link} to="/venda"
               sx={{ my: 2, color: 'white', display: 'block' }}
             >

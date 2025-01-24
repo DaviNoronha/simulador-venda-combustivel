@@ -93,6 +93,11 @@ function Form() {
     }
   };
 
+  const formatInput = (input: string) => {
+    const inputFormatado = input.replace('R$', '').trim().replace(',', '.');
+    return parseFloat(inputFormatado);
+  }
+
   return (
     <>
       <Grid2 container spacing={3}>
@@ -147,12 +152,12 @@ function Form() {
         <DialogTitle>
           Venda de {combustivel?.nome}
         </DialogTitle>
+
         <DialogContent>
           <NumericFormat
             value={litros}
-            onValueChange={(values) => {
-              const rawValue = parseFloat(values.value);
-              changeLitros(rawValue);
+            onChange={e => {
+              changeLitros(formatInput(e.target.value));
             }}
             customInput={TextField}
             valueIsNumericString
@@ -160,6 +165,7 @@ function Form() {
             decimalSeparator=","
             suffix=" L"
             allowLeadingZeros={true}
+            decimalScale={2}
             inputMode="numeric"
             label="Quantidade em litros"
             variant="outlined"
@@ -169,9 +175,8 @@ function Form() {
           />
           <NumericFormat
             value={valor}
-            onValueChange={(values) => {
-              const rawValue = parseFloat(values.value);
-              changeValor(rawValue);
+            onChange={e => {
+              changeValor(formatInput(e.target.value));
             }}
             customInput={TextField}
             valueIsNumericString
