@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   Typography,
   Card,
@@ -46,8 +46,8 @@ function Form() {
   const abrirModal = (combustivel: Combustivel, index: number) => {
     setSelectedCard(index);
     setCombustivel(combustivel);
-    setLitros(0);
-    setValor(0);
+    setLitros(1);
+    setValor(combustivel.preco);
     setModal(true);
   };
 
@@ -64,7 +64,7 @@ function Form() {
     }
 
     if (combustivel !== null) {
-      const vendas = JSON.parse(localStorage.getItem('vendas') || '[]') as Venda[];
+      const vendas: Venda[] = JSON.parse(localStorage.getItem('vendas') || '[]') as Venda[];
       const novaVenda: Venda = { combustivel: combustivel, litros: Number(litros), valor: Number(valor), data: new Date().toISOString() };
       const vendasAtualizadas: Venda[] = [...vendas, novaVenda];
 
@@ -75,26 +75,37 @@ function Form() {
     }
   };
 
-  const changeLitros = (l: number) => {
+  const changeLitros = (litros: number) => {
     setError(false);
-    if (!isNaN(l)) {
-      setLitros(l);
-      const preco = combustivel?.preco || 0;
-      setValor(l * preco);
+
+    if (isNaN(litros)) {
+      setLitros(0);
+      setValor(0);
+    } else {
+      const preco: number = combustivel?.preco || 0;
+      setLitros(litros);
+      setValor(litros * preco);
     }
   };
 
-  const changeValor = (v: number) => {
+  const changeValor = (valor: number) => {
     setError(false);
-    if (!isNaN(v)) {
-      setValor(v);
+
+    if (isNaN(valor)) {
+      setLitros(0);
+      setValor(0);
+    } else {
       const preco = combustivel?.preco || 0;
-      setLitros(v / preco);
+      setValor(valor);
+      setLitros(valor / preco);
     }
   };
 
   const formatInput = (input: string) => {
-    const inputFormatado = input.replace('R$', '').trim().replace(',', '.');
+    const inputFormatado = input.replace('R$', '').trim()
+        .replace(/\./g, '')
+        .replace(',', '.');
+
     return parseFloat(inputFormatado);
   }
 
@@ -171,6 +182,8 @@ function Form() {
             variant="outlined"
             fullWidth
             allowNegative={false}
+            error={error}
+            helperText={error ? "Preencha os campos corretamente" : ""}
             style={{ marginTop: '20px', marginBottom: '20px' }}
           />
           <NumericFormat
@@ -191,11 +204,13 @@ function Form() {
             variant="outlined"
             fullWidth
             allowNegative={false}
+            error={error}
+            helperText={error ? "Preencha os campos corretamente" : ""}
           />
         </DialogContent>
 
         <DialogActions>
-          <Button endIcon={<Save />} color="primary" variant="outlined" type="submit">
+          <Button endIcon={<Save />} color="primary" variant="outlined" type="submit" disabled={litros == 0 || valor == 0}>
             Salvar
           </Button>
           <Button endIcon={<DoDisturb />} color="error" variant="outlined" onClick={fecharModal}>
