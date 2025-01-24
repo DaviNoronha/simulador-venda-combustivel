@@ -3,7 +3,6 @@ import {
   Typography,
   Card,
   CardContent,
-  IconButton,
   TextField,
   Button,
   Grid2,
@@ -14,7 +13,6 @@ import {
   Snackbar,
   Alert,
   SnackbarCloseReason,
-  Stack,
   CardActionArea,
   Icon,
   Box,
@@ -22,22 +20,17 @@ import {
 import { combustiveis } from '../utils/combustiveis';
 import { Venda } from '../interfaces/Venda';
 import { Combustivel } from '../interfaces/Combustivel';
-import { Save, DoDisturb, LocalGasStation, PropaneTank, EvStation } from '@mui/icons-material';
+import { Save, DoDisturb, LocalGasStation } from '@mui/icons-material';
+import { NumericFormat } from 'react-number-format';
 
 function Form() {
   const [combustivel, setCombustivel] = useState<Combustivel | null>(null);
   const [litros, setLitros] = useState<number>();
   const [valor, setValor] = useState<number>(0);
-  const [vendas, setVendas] = useState<Venda[]>([]);
   const [modal, setModal] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
   const [selectedCard, setSelectedCard] = useState<number | null>(null);
-
-  useEffect(() => {
-    const vendasSalvas = JSON.parse(localStorage.getItem('vendas') || '[]') as Venda[];
-    setVendas(vendasSalvas);
-  }, []);
 
   const fecharSnackbar = (
     event?: React.SyntheticEvent | Event,
@@ -71,10 +64,10 @@ function Form() {
     }
 
     if (combustivel !== null) {
-      const novaVenda: Venda = { combustivel: combustivel, litros: litros, valor: valor, data: new Date().toISOString() };
-      const vendasAtualizadas = [...vendas, novaVenda];
+      const vendas = JSON.parse(localStorage.getItem('vendas') || '[]') as Venda[];
+      const novaVenda: Venda = { combustivel: combustivel, litros: Number(litros), valor: Number(valor), data: new Date().toISOString() };
+      const vendasAtualizadas: Venda[] = [...vendas, novaVenda];
 
-      setVendas(vendasAtualizadas);
       localStorage.setItem('vendas', JSON.stringify(vendasAtualizadas));
 
       setSuccess(true);
@@ -154,39 +147,54 @@ function Form() {
         <DialogTitle>
           Venda de {combustivel?.nome}
         </DialogTitle>
-
         <DialogContent>
-          <TextField
-            label="Quantidade em litros"
-            id="litros"
-            name="litros"
-            type="number"
+          <NumericFormat
             value={litros}
-            onChange={(e) => changeLitros(e.target.value)}
-            error={error}
-            helperText={error ? "Preencha os campos corretamente" : ""}
+            onValueChange={(values) => {
+              const rawValue = parseFloat(values.value);
+              changeLitros(rawValue);
+            }}
+            customInput={TextField}
+            valueIsNumericString
+            thousandSeparator="."
+            decimalSeparator=","
+            suffix=" L"
+            allowLeadingZeros={true}
+            inputMode="numeric"
+            label="Quantidade em litros"
+            variant="outlined"
             fullWidth
-            required
+            allowNegative={false}
             style={{ marginTop: '20px', marginBottom: '20px' }}
           />
-          <TextField
-            label="Valor a Pagar (R$)"
-            id="valor"
-            name="valor"
-            type="number"
-            onChange={(e) => changeValor(e.target.value)}
+          <NumericFormat
             value={valor}
+            onValueChange={(values) => {
+              const rawValue = parseFloat(values.value);
+              changeValor(rawValue);
+            }}
+            customInput={TextField}
+            valueIsNumericString
+            thousandSeparator="."
+            decimalSeparator=","
+            prefix="R$ "
+            allowLeadingZeros={true}
+            decimalScale={2}
+            fixedDecimalScale={true}
+            inputMode="numeric"
+            label="Valor"
+            variant="outlined"
             fullWidth
-            style={{ marginBottom: '20px' }}
+            allowNegative={false}
           />
         </DialogContent>
 
         <DialogActions>
-          <Button color="primary" variant="outlined" type="submit">
-            <Save />
+          <Button endIcon={<Save />} color="primary" variant="outlined" type="submit">
+            Salvar
           </Button>
-          <Button color="error" variant="outlined" onClick={fecharModal}>
-            <DoDisturb />
+          <Button endIcon={<DoDisturb />} color="error" variant="outlined" onClick={fecharModal}>
+            Cancelar
           </Button>
         </DialogActions>
       </Dialog>

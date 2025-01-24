@@ -14,9 +14,9 @@ type TableProps = {
   vendas: Venda[];
 };
 
-function AppTable(props: TableProps) {
+function TableRelatorio(props: TableProps) {
   return (
-    <div>
+    <>
       <TableContainer component={Paper} style={{
         marginTop: '40px', maxHeight: '600px',
         overflow: 'auto'
@@ -27,21 +27,23 @@ function AppTable(props: TableProps) {
               <TableCell>Tipo de Combustível</TableCell>
               <TableCell>Quantidade (litros)</TableCell>
               <TableCell>Valor Total (R$)</TableCell>
+              <TableCell>Data de Criação</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {props.vendas.map((venda, index) => (
               <TableRow key={index}>
                 <TableCell>{venda.combustivel.nome}</TableCell>
-                <TableCell>{venda.litros}</TableCell>
+                <TableCell>{venda.litros.toFixed(2)}</TableCell>
                 <TableCell>{venda.valor.toFixed(2)}</TableCell>
+                <TableCell>{new Date(venda.data).toLocaleDateString('pt-BR')}</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-    </div>
+    </>
   )
 }
 
-export default AppTable
+export default TableRelatorio

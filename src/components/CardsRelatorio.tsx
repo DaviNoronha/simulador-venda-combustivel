@@ -10,7 +10,7 @@ type CardProps = {
   vendas: Venda[];
 };
 
-function Cards(props: CardProps) {
+function CardsRelatorio(props: CardProps) {
   const calcularTotaisPorCombustivel = () => {
     const totais: PrecoPorLitro = { gasolina: 0, diesel: 0, etanol: 0 };
     props.vendas.forEach((venda) => {
@@ -49,4 +49,4 @@ function Cards(props: CardProps) {
   );
 }
 
-export default Cards;
+export default CardsRelatorio;

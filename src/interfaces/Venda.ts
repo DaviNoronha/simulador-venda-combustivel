@@ -4,5 +4,5 @@ export interface Venda {
   combustivel: Combustivel;
   litros: number;
   valor: number;
-  data: Date;
+  data: string;
 }
