@@ -22,6 +22,7 @@ import { Venda } from '../interfaces/Venda';
 import { Combustivel } from '../interfaces/Combustivel';
 import { Save, DoDisturb, LocalGasStation } from '@mui/icons-material';
 import { NumericFormat } from 'react-number-format';
+import { formatarValor } from '../utils/formatarValor';
 
 function Form() {
   const [combustivel, setCombustivel] = useState<Combustivel | null>(null);
@@ -138,7 +139,7 @@ function Form() {
                     </Typography>
                   </Box>
                   <Typography variant="body1" style={{ marginTop: '10px' }}>
-                    Preço por litro: R$ {combustivel.preco.toFixed(2)}
+                    Preço por litro: R$ {formatarValor(combustivel.preco)}
                   </Typography>
                 </CardContent>
               </CardActionArea>

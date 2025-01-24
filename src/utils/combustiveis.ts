@@ -1,5 +1,4 @@
 import { Combustivel } from "../interfaces/Combustivel";
-import { LocalGasStation, PropaneTank, EvStation } from '@mui/icons-material';
 
 export const combustiveis: Combustivel[] = [
   {

@@ -1,3 +1,6 @@
 export interface PrecoPorLitro {
-  [key: string]: number;
+  [key: string]: {
+    valor: number,
+    litros: number,
+  };
 }

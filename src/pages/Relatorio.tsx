@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import '../assets/App.css'
 import CardsRelatorio from '../components/CardsRelatorio';
 import TableRelatorio from '../components/TableRelatorio';
 import { Venda } from '../interfaces/Venda';
-import { Typography } from '@mui/material';
 
 function Relatorio() {
   const [vendas, setVendas] = useState<Venda[]>([]);
