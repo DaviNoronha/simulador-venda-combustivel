@@ -15,7 +15,7 @@ export function AppRoutes() {
         <Router>
             <Navbar></Navbar>
 
-            <Container maxWidth={false}>
+            <Container maxWidth="xl">
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/venda" element={<Venda />} />

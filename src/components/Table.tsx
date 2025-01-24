@@ -34,7 +34,7 @@ function AppTable(props: TableProps) {
               <TableRow key={index}>
                 <TableCell>{venda.combustivel.nome}</TableCell>
                 <TableCell>{venda.litros}</TableCell>
-                <TableCell>{venda.valor}</TableCell>
+                <TableCell>{venda.valor.toFixed(2)}</TableCell>
               </TableRow>
             ))}
           </TableBody>

@@ -15,6 +15,9 @@ import {
   Alert,
   SnackbarCloseReason,
   Stack,
+  CardActionArea,
+  Icon,
+  Box,
 } from '@mui/material';
 import { combustiveis } from '../utils/combustiveis';
 import { Venda } from '../interfaces/Venda';
@@ -29,6 +32,7 @@ function Form() {
   const [modal, setModal] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
+  const [selectedCard, setSelectedCard] = useState<number | null>(null);
 
   useEffect(() => {
     const vendasSalvas = JSON.parse(localStorage.getItem('vendas') || '[]') as Venda[];
@@ -46,7 +50,8 @@ function Form() {
     setSuccess(false);
   };
 
-  const abrirModal = (combustivel: Combustivel) => {
+  const abrirModal = (combustivel: Combustivel, index: number) => {
+    setSelectedCard(index);
     setCombustivel(combustivel);
     setLitros(0);
     setValor(0);
@@ -54,6 +59,7 @@ function Form() {
   };
 
   const fecharModal = () => {
+    setSelectedCard(null);
     setModal(false);
     setCombustivel(null);
   };
@@ -67,10 +73,10 @@ function Form() {
     if (combustivel !== null) {
       const novaVenda: Venda = { combustivel: combustivel, litros: litros, valor: valor, data: new Date().toISOString() };
       const vendasAtualizadas = [...vendas, novaVenda];
-  
+
       setVendas(vendasAtualizadas);
       localStorage.setItem('vendas', JSON.stringify(vendasAtualizadas));
-  
+
       setSuccess(true);
       fecharModal();
     }
@@ -94,30 +100,39 @@ function Form() {
     }
   };
 
-
-  const icones = {
-    gasolina: <LocalGasStation fontSize="large" style={{ color: '#FF9800' }} />,
-    diesel: <PropaneTank fontSize="large" style={{ color: '#9C27B0' }} />,
-    etanol: <EvStation fontSize="large" style={{ color: '#4CAF50' }} />,
-  };
-
   return (
     <>
       <Grid2 container spacing={3}>
-        {combustiveis.map((combustivel: Combustivel) => (
+        {combustiveis.map((combustivel: Combustivel, index) => (
           <Grid2 size={{ xs: 12, md: 4 }} key={combustivel.id}>
             <Card>
-              <CardContent>
-                <IconButton
-                  onClick={() => abrirModal(combustivel)}
-                  style={{ display: 'block', margin: '0 auto' }}
-                >
-                  {icones[combustivel.id]}
-                </IconButton>
-                <Typography variant="h6" align="center">
-                  {combustivel.nome}
-                </Typography>
-              </CardContent>
+              <CardActionArea
+                onClick={() => abrirModal(combustivel, index)}
+                data-active={selectedCard === index ? '' : undefined}
+                sx={{
+                  height: '100%',
+                  '&[data-active]': {
+                    backgroundColor: 'action.selected',
+                    '&:hover': {
+                      backgroundColor: 'action.selectedHover',
+                    },
+                  },
+                }}
+              >
+                <CardContent>
+                  <Box display="flex" alignItems="center" gap={2}>
+                    <Icon fontSize='large'>
+                      <LocalGasStation fontSize="large" style={{ color: combustivel.cor }} />
+                    </Icon>
+                    <Typography variant="h6">
+                      {combustivel.nome}
+                    </Typography>
+                  </Box>
+                  <Typography variant="body1" style={{ marginTop: '10px' }}>
+                    Preço por litro: R$ {combustivel.preco.toFixed(2)}
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
             </Card>
           </Grid2>
         ))}
