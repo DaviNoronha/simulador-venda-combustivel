@@ -24,7 +24,7 @@ import { Save, DoDisturb, LocalGasStation } from '@mui/icons-material';
 import { NumericFormat } from 'react-number-format';
 import { formatarValor } from '../utils/formatarValor';
 
-function Form() {
+function FormVenda() {
   const [combustivel, setCombustivel] = useState<Combustivel | null>(null);
   const [litros, setLitros] = useState<number>();
   const [valor, setValor] = useState<number>(0);
@@ -234,4 +234,4 @@ function Form() {
   );
 }
 
-export default Form;
+export default FormVenda;

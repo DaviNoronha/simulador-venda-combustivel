@@ -1,50 +1,41 @@
-# React + TypeScript + Vite
+<h1 align="center">Simulador de Venda de Combustíveis</h1>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> Simulador de venda de combustíveis com relatórios;<br>
+> UI foi construída usando Typescript, React e Material UI;<br>
 
-Currently, two official plugins are available:
+## Prerequisitos
+- NPM
+- Git
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tecnologias 
+<div style="display: inline_block">
+    <img align="center" alt="" src="https://img.shields.io/badge/React-35495E?style=for-the-badge&logo=react&logoColor=4FC08D" />
+    <img align="center" alt="" src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" />
+    <img align="center" alt="" src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" />
+    <img align="center" alt="" src="https://img.shields.io/badge/CSS-239120?&style=for-the-badge&logo=css3&logoColor=white" />
+</div>
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Clonando o projeto
+```sh
+$ git clone https://github.com/DaviNoronha/simulador-venda-combustivel
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+## Buildando o projeto
+- No diretório do projeto execute o comando em seu terminal
+```sh
+$ npm install && npm run dev
 ```
+- Verifique no terminal a URL que ficará disponível
+- Acesse a UI por essa URL
+
+## Regras de Negócio
+- O sistema permite uma simulação de venda de combustível
+- O sistema possui quatro tipos de combustíveis disponíveis para venda
+- O sistema realiza um cálculo com base na quantidade de litros e no preço do combustível
+- O sistema possui uma página de relatório de todas as vendas realizadas
+
+## Autor
+👤 **Davi Noronha Gato**
+
+* Github: [@DaviNoronha](https://github.com/DaviNoronha)
+* LinkedIn: [@davi-noronha-34ba04267](https://www.linkedin.com/in/davi-noronha-34ba04267/)
