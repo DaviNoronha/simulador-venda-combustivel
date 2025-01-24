@@ -114,7 +114,7 @@ function Form() {
     <>
       <Grid2 container spacing={3}>
         {combustiveis.map((combustivel: Combustivel, index) => (
-          <Grid2 size={{ xs: 12, md: 4 }} key={combustivel.id}>
+          <Grid2 size={{ xs: 12, md: 3 }} key={combustivel.id}>
             <Card>
               <CardActionArea
                 onClick={() => abrirModal(combustivel, index)}

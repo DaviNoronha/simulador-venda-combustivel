@@ -13,7 +13,7 @@ type CardProps = {
 
 function CardsRelatorio(props: CardProps) {
   const calcularTotaisPorCombustivel = () => {
-    const totais: PrecoPorLitro = { gasolina: {valor: 0, litros:0}, diesel: {valor: 0, litros:0}, etanol: {valor: 0, litros:0} };
+    const totais: PrecoPorLitro = { gasolina_comum: { valor: 0, litros: 0 }, gasolina_aditivada: { valor: 0, litros: 0 }, diesel: { valor: 0, litros: 0 }, etanol: { valor: 0, litros: 0 } };
     props.vendas.forEach((venda) => {
       totais[venda.combustivel.id].valor += venda.valor;
       totais[venda.combustivel.id].litros += venda.litros;
@@ -28,7 +28,7 @@ function CardsRelatorio(props: CardProps) {
     <>
       <Grid2 container spacing={3}>
         {combustiveis.map((combustivel: Combustivel) => (
-          <Grid2 size={{ xs: 12, md: 4 }} key={combustivel.id}>
+          <Grid2 size={{ xs: 12, md: 3 }} key={combustivel.id}>
             <Card>
               <CardContent>
                 <Box display="flex" alignItems="center" gap={2}>
